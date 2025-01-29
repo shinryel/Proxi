@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperbeam Room</title>
+    <script src="https://unpkg.com/@hyperbeam/web"></script>
+</head>
+<body>
+    <h1>Embedded Hyperbeam Room</h1>
+    <div id="hyperbeam-container" style="width: 100%; height: 500px; border: 1px solid black;"></div>
+    
+    <script>
+        (async () => {
+            const container = document.getElementById('hyperbeam-container');
+
+            // Replace YOUR_API_KEY with your actual Hyperbeam API key
+            const response = await fetch('https://engine.hyperbeam.com/v0/vm', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer sk_live_5G-YaOcmCxfsemSNzH7pMlwZFQWSAUKLlo8wtRVfHy4',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+            });
+
+            const data = await response.json();
+            if (!data.embed_url) {
+                container.innerHTML = "<p>Failed to create Hyperbeam room. Check API key.</p>";
+                return;
+            }
+
+            const hb = new Hyperbeam(data.embed_url, container);
+
+            // Clean up the session when leaving the page
+            window.addEventListener('beforeunload', () => hb.destroy());
+        })();
+    </script>
+</body>
+</html>
+
